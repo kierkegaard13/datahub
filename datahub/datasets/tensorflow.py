@@ -1,3 +1,5 @@
+import os
+import shutil
 from typing import Optional, Any
 
 from datasets.dataset import Dataset
@@ -6,22 +8,22 @@ import tensorflow_datasets as tfds
 
 
 class TFDataset(Dataset):
-    def __init__(self, name: str):
+    def __init__(self, name: str, download_directory: str = "data/"):
         self.name = name
+        self.download_directory = download_directory
 
     @staticmethod
     def list():
         return tfds.list_builders()
 
     @classmethod
-    def get(cls, name):
+    def get(cls, name, download_directory="data/"):
         if name not in cls.list():
             raise ValueError("Invalid dataset name. Try calling list() to get a list of valid names.")
-        return cls(name)
+        return cls(name, download_directory)
 
     def download(
         self,
-        directory: str = "data/",
         builder_kwargs: Optional[dict[str, Any]] = None,
         download_and_prepare_kwargs: Optional[dict[str, Any]] = None
     ):
@@ -29,8 +31,12 @@ class TFDataset(Dataset):
             builder_kwargs = {}
         if download_and_prepare_kwargs is None:
             download_and_prepare_kwargs = {}
-        self.builder = tfds.builder(self.name, data_dir=directory, **builder_kwargs)
+        self.builder = tfds.builder(self.name, data_dir=self.download_directory, **builder_kwargs)
         self.builder.download_and_prepare(**download_and_prepare_kwargs)
+
+    def clean(self):
+        shutil.rmtree(os.path.join(self.download_directory, "downloads"))
+        shutil.rmtree(os.path.join(self.download_directory, self.name))
 
     def read(
         self,
