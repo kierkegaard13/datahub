@@ -58,6 +58,7 @@ class TFDataset(Dataset):
             as_supervised=as_supervised,
             shuffle_files=shuffle,
             read_config=read_config,
+            batch_size=batch_size,
             decoders=decoders,
             **as_dataset_kwargs
         )

@@ -7,8 +7,7 @@ setup(
     author="Gavin Sellers",
     license="MIT",
     platforms="any",
-    package_dir={"": "datahub"},
-    packages=find_packages("datahub"),
+    packages=find_packages(),
     install_requires=[
         "tensorflow-datasets>=4.8.3",
     ],
