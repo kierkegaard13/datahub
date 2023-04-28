@@ -9,7 +9,7 @@ class Dataset(ABC):
             assert cls.name not in Dataset.registry, f"Dataset: {cls.name} is already registered"
             Dataset.registry[cls.name] = cls
 
-    def list_datasets(self):
+    def list(self):
         for key in self.registry:
             print(key)
 
